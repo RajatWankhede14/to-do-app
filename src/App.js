@@ -1,16 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import { FormControl, InputLabel, Input, Button  } from '@material-ui/core';
 import Todo from './Todo'
+import db from "./firebase";
+import firebase from 'firebase';
+
 
 function App() {
 
   const [todos, setTodos] = useState([]);
   const [input, setInput] = useState('');
 
+  useEffect(() => {
+    db.collection('todos').orderBy('timestamp', 'desc').onSnapshot(snapshot => {
+      setTodos(snapshot.docs.map(doc => doc.data().todo))
+    })
+
+  }, []);
+
   const addTodo = event => {
     event.preventDefault(); // stop the refresh
-    setTodos([...todos, input]); // add new todo while keeping old todos
+    db.collection('todos').add({
+      todo: input,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    })
+
+    
     setInput(''); // clears the input field
   }
   return (
@@ -21,7 +36,7 @@ function App() {
         <InputLabel>Write a Task</InputLabel>
         <Input type="text" value={input} onChange={event => setInput(event.target.value)} />
       </FormControl>
-      <Button type="submit" disabled={!input} variant="contained" color="primary" onClick={addTodo}>Add</Button>
+      <Button type="submit" disabled={!input} variant="contained" color="secondary" onClick={addTodo}>Add</Button>
       </form>
       <ul>
         {todos.map(todo => (

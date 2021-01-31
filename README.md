@@ -2,6 +2,14 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+# Demo
+
+This app is deployed using Firebase at https://to-do-app-ead96.web.app/
+
+## Author
+
+Rajat Wankhede
+
 ## Available Scripts
 
 In the project directory, you can run:
