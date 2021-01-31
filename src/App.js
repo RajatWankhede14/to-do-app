@@ -4,6 +4,7 @@ import { FormControl, InputLabel, Input, Button  } from '@material-ui/core';
 import Todo from './Todo'
 import db from "./firebase";
 import firebase from 'firebase';
+import AddIcon from '@material-ui/icons/Add';
 
 
 function App() {
@@ -13,7 +14,7 @@ function App() {
 
   useEffect(() => {
     db.collection('todos').orderBy('timestamp', 'desc').onSnapshot(snapshot => {
-      setTodos(snapshot.docs.map(doc => doc.data().todo))
+      setTodos(snapshot.docs.map(doc => ({id: doc.id ,todo: doc.data().todo})))
     })
 
   }, []);
@@ -36,11 +37,12 @@ function App() {
         <InputLabel>Write a Task</InputLabel>
         <Input type="text" value={input} onChange={event => setInput(event.target.value)} />
       </FormControl>
-      <Button type="submit" disabled={!input} variant="contained" color="secondary" onClick={addTodo}>Add</Button>
+      <Button type="submit" disabled={!input} variant="contained" color="secondary" onClick={addTodo}><AddIcon/>Add</Button>
       </form>
+
       <ul>
         {todos.map(todo => (
-          <Todo text={todo}/>
+          <Todo todo={todo}/>
         ))}
       </ul>
     </div>
